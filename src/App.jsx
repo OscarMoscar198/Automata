@@ -12,71 +12,112 @@ function App() {
 
     setIsValid(isValidInput);
 
-    // Validación de caracteres individuales
-    const inputArray = inputValue.split('');
-    const charValidityArray = inputArray.map((char, index) => {
-      let charIsValid = true;
-
-      // Mensaje para mostrar el carácter
-      let charMessage = '';
-
-      // Validar el primer carácter
-      if (index === 0) {
-        charIsValid = char === 'X' || char === 'Y';
-        charMessage = char === 'X' ? 'X es válido' : char === 'Y' ? 'Y es válido' : 'Inválido';
-      }
-
-      // Validar el segundo carácter
-      if (index === 1) {
-        if (inputArray[0] === 'X') {
-          charIsValid = char === 'Y' || char === 'Z';
-          charMessage = char === 'Y' ? 'Y es válido' : char === 'Z' ? 'Z es válido' : 'Inválido';
-        } else if (inputArray[0] === 'Y') {
-          charIsValid = /^[A-V]$/.test(char);
-          charMessage = /^[A-V]$/.test(char) ? `${char} es válido` : 'Inválido';
-        }
-      }
-
-      if (index === 2) {
-        charIsValid = /^[A-Z]$/.test(char);
-        charMessage = /^[A-Z]$/.test(char) ? `${char} es válido` : `${char} Inválido` ;
-      }
-
-      if (index === 4) {
-        charIsValid = /^[0-9]$/.test(char);
-        charMessage = /^[0-9]$/.test(char) ? `${char} es válido` : `${char} Inválido` ;
-      }
-
-      if (index === 5) {
-        charIsValid = /^[0-9]$/.test(char);
-        charMessage = /^[0-9]$/.test(char) ? `${char} es válido` : `${char} Inválido` ;
-      }
-
-      if (index === 6) {
-        if (inputArray[4] === '0') {
-          charIsValid = /^[1-9]$/.test(char);
-          charMessage = /^[1-9]$/.test(char) ? `${char} es válido` : ` ${char} es Inválido` ;
-        } else if (inputArray[4] && inputArray[5] === '1, 2, 3, 4, 5, 6 ,7 , 8, 9') {
-          charIsValid = /^[0-9]$/.test(char);
-          charMessage = /^[0-9]$/.test(char) ? `${char} es válido` : `${char} es Inválido` ;
-        }
-      }
-      // Validar que los guiones sean correctos
-      if (index === 3 || index === 7) {
-        charIsValid = char === '-';
-        charMessage = charIsValid ? '- es válido' : ` Inválido` ;
-      }
-
-      // Validar el último carácter (letras)
-      if (index === 8) {
-        charIsValid = /^[A-Z]$/.test(char);
-        charMessage = /^[A-Z]$/.test(char) ? `${char} es válido` : `${char} Inválido` ;
-      }
-
-      return { char, isValid: charIsValid, message: `q${index} ${charMessage}` };
-    });
-
-    setCharacterValidity(charValidityArray);
+ // Validación de caracteres individuales
+ const inputArray = inputValue.split('');
+ const charValidityArray = [];
+ let isValid = true;
+ 
+ for (let i = 0; i < inputArray.length; i++) {
+   const char = inputArray[i];
+   let charIsValid = true;
+   let charMessage = '';
+ 
+   if (i === 0) {
+     charIsValid = char === 'X' || char === 'Y';
+     charMessage = char === 'X' ? `q0 ${char} es válido` : char === 'Y' ? `q12 ${char} es válido` : 'Inválido';
+   }
+ 
+   if (i === 1) {
+     if (inputArray[0] === 'Y') {
+       charIsValid = /^[A-V]$/.test(char);
+       charMessage = charIsValid ? `q13 ${char} es válido` : 'Inválido';
+     } else if (inputArray[0] === 'X') {
+       charIsValid = char === 'Y' || char === 'Z';
+       charMessage = charIsValid ? `q1 ${char} es válido` : 'Inválido';
+     } else {
+       charIsValid = false;
+       charMessage = 'Inválido';
+     }
+   }
+ 
+   if (i === 2) {
+     charIsValid = /^[A-Z]$/.test(char);
+     charMessage = charIsValid ? `q3 ${char} es válido` : 'Inválido';
+   }
+ 
+   if (i === 3) {
+     charIsValid = char === '-';
+     charMessage = charIsValid ? `q4 ${char} es válido` : 'Inválido';
+   }
+ 
+   if (i === 4) {
+     if (char === '0') {
+       charMessage = `q5 ${char} es válido`;
+     } else if (/^[1-9]$/.test(char)) {
+       charMessage = `q8 ${char} es válido`;
+     } else {
+       charIsValid = false;
+       charMessage = 'Inválido';
+     }
+   }
+ 
+   if (i === 5) {
+     if (inputArray[4] === '0') {
+       if (char === '0') {
+         charMessage = `q6 ${char} es válido`;
+       } else if (/^[1-9]$/.test(inputArray[5])) {
+         charIsValid = true;
+         charMessage = `q6 ${char} es válido`;
+       } else {
+         charIsValid = false;
+         charMessage = 'Inválido';
+       }
+     } else if (/^[1-9]$/.test(inputArray[4])) {
+       charIsValid = /^[0-9]$/.test(char);
+       charMessage = charIsValid ? `q9 ${char} es válido` : 'Inválido';
+     } else {
+       charIsValid = false;
+       charMessage = 'Inválido';
+     }
+   }
+ 
+   if (i === 6) {
+     if (char === '0') {
+       if (/^[1-9]$/.test(inputArray[4]) || /^[1-9]$/.test(inputArray[5])) {
+         charIsValid = true;
+         charMessage = `q7 ${char} es válido`;
+       } else {
+         charIsValid = false;
+         charMessage = 'Inválido';
+       }
+     } else if (/^[1-9]$/.test(char)) {
+       charMessage = `q7 ${char} es válido`;
+     } else {
+       charIsValid = false;
+       charMessage = 'Inválido';
+     }
+   }
+ 
+   if (i === 7) {
+     charIsValid = char === '-';
+     charMessage = charIsValid ? `q10 ${char} es válido` : 'Inválido';
+   }
+ 
+   if (i === 8) {
+     charIsValid = /^[A-Z]$/.test(char);
+     charMessage = charIsValid ? `q11 ${char} es válido` : 'Inválido';
+   }
+ 
+   charValidityArray.push({ char, isValid: charIsValid, message: charMessage });
+ 
+   if (!charIsValid) {
+     isValid = false;
+     break;
+   }
+ }
+ 
+ setCharacterValidity(charValidityArray);
+ setIsValid(isValid);
   };
 
   return (
@@ -87,6 +128,7 @@ function App() {
         placeholder="Ingrese una cadena"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
+        maxLength={9}
       />
       <button onClick={validateString}>Validar</button>
       {isValid !== null && (
